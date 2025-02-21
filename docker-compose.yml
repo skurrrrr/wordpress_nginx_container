@@ -1,0 +1,10 @@
+services:
+  nginx:
+    container_name: ${CONTAINER_NAME}-nginx
+    image: nginx:1.15.12-alpine
+    restart: unless-stopped
+    env_file: .env
+    ports:
+      - "8080:81"
+    volumes:
+      - ./nginx:/etc/nginx/conf.d/:rw
