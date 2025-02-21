@@ -8,6 +8,7 @@ services:
       - "8080:81"
     volumes:
       - ./nginx:/etc/nginx/conf.d/:rw
+      - wordpress:/var/www/html
     networks:
      - internal
 
@@ -45,8 +46,27 @@ services:
     networks:
       - internal
 
+  wordpress:
+    depends_on:
+      - database # if you change this change it about as well
+    container_name: ${CONTAINER_NAME}-wordpress
+    image: wordpress:6.5.2-fpm-alpine
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      WORDPRESS_DB_HOST: database:3306
+      WORDPRESS_DB_NAME: '${DATABASE_NAME}'
+      WORDPRESS_DB_USER: '${DATABASE_USER}'
+      WORDPRESS_DW_PASSWORD: '${DATABASE_PASSWORD}'
+    volumes:
+      - wordpress:/var/www/html
+    networks:
+      - internal
+
+
 volumes:
   dbdata:
+  wordpress:
 
 networks:
   internal:
